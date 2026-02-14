@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complaint Details - SafeCollege</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .complaint-detail-page {
+            min-height: 100vh;
+            background: #f8f9fa;
+            padding: 20px;
+        }
+
+        .complaint-header {
+            background: linear-gradient(135deg, var(--primary) 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .complaint-header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            gap: 20px;
+        }
+
+        .complaint-title h1 {
+            margin: 0 0 10px;
+            font-size: 28px;
+        }
+
+        .complaint-meta {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        .status-badge {
+            background: rgba(255,255,255,0.2);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .content-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 25px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .main-content {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .complaint-section {
+            margin-bottom: 30px;
+        }
+
+        .complaint-section h3 {
+            font-size: 16px;
+            color: var(--dark);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .complaint-section h3::before {
+            display: inline-block;
+            width: 4px;
+            height: 4px;
+            background: var(--primary);
+            border-radius: 50%;
+        }
+
+        .student-info {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .info-field {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .info-field label {
+            font-size: 12px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .info-field value {
+            font-size: 14px;
+            color: var(--dark);
+            font-weight: 500;
+        }
+
+        .complaint-message {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            line-height: 1.6;
+            color: #333;
+            border-left: 4px solid var(--primary);
+        }
+
+        .image-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .gallery-image {
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+            background: #f0f0f0;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .gallery-image:hover {
+            transform: scale(1.05);
+        }
+
+        .gallery-image img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .sidebar-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .sidebar-card h4 {
+            font-size: 14px;
+            margin: 0 0 15px;
+            color: var(--dark);
+            font-weight: 700;
+        }
+
+        .status-timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .timeline-item {
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            font-size: 12px;
+            border-left: 3px solid var(--primary);
+        }
+
+        .timeline-item.active {
+            background: var(--primary);
+            color: white;
+            border-left-color: #764ba2;
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .action-btn {
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 13px;
+            text-align: center;
+        }
+
+        .action-btn.primary {
+            background: linear-gradient(135deg, var(--primary) 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102,126,234,0.4);
+        }
+
+        .action-btn.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102,126,234,0.6);
+        }
+
+        .action-btn.secondary {
+            background: #f0f0f0;
+            color: var(--dark);
+        }
+
+        .action-btn.secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .update-form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .form-row.full {
+            grid-template-columns: 1fr;
+        }
+
+        .update-form select,
+        .update-form textarea {
+            padding: 10px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 13px;
+        }
+
+        .update-form textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .modal-header {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--dark);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+        }
+
+        @media (max-width: 768px) {
+            .content-wrapper {
+                grid-template-columns: 1fr;
+            }
+
+            .student-info {
+                grid-template-columns: 1fr;
+            }
+
+            .complaint-header-content {
+                flex-direction: column;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">🔐 SafeCollege</div>
+            <ul class="nav-menu">
+                <li><a href="/admin-dashboard">Back to Dashboard</a></li>
+                <li><button class="btn btn-logout" onclick="logout()">Logout</button></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="complaint-detail-page">
+        <div class="container">
+            <div class="complaint-header">
+                <div class="complaint-header-content">
+                    <div class="complaint-title">
+                        <h1>Complaint Details</h1>
+                        <div class="complaint-meta">
+                            <span id="complaintId">ID: Loading...</span>
+                            <span id="complaintDate">Date: Loading...</span>
+                        </div>
+                    </div>
+                    <div class="status-badge" id="statusBadge">PENDING</div>
+                </div>
+            </div>
+
+            <div class="content-wrapper">
+                <div class="main-content">
+                    <!-- Student Information Section -->
+                    <div class="complaint-section">
+                        <h3>👤 Student Information</h3>
+                        <div class="student-info">
+                            <div class="info-field">
+                                <label>Name</label>
+                                <value id="studentName">Loading...</value>
+                            </div>
+                            <div class="info-field">
+                                <label>Email</label>
+                                <value id="studentEmail">Loading...</value>
+                            </div>
+                            <div class="info-field">
+                                <label>Phone</label>
+                                <value id="studentPhone">Loading...</value>
+                            </div>
+                            <div class="info-field">
+                                <label>Severity</label>
+                                <value id="severityLabel">Loading...</value>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Complaint Message Section -->
+                    <div class="complaint-section">
+                        <h3>📝 Complaint Message</h3>
+                        <div class="complaint-message" id="complaintMessage">
+                            Loading...
+                        </div>
+                    </div>
+
+                    <!-- Evidence Section -->
+                    <div class="complaint-section" id="evidenceSection" style="display: none;">
+                        <h3>📸 Evidence Images</h3>
+                        <div class="image-gallery" id="imageGallery"></div>
+                    </div>
+
+                    <!-- Admin Notes Section -->
+                    <div class="complaint-section">
+                        <h3>📋 Admin Notes</h3>
+                        <div id="adminNotesList" style="display: none;">
+                            <div class="complaint-message" id="existingAdminNotes"></div>
+                        </div>
+                        <div id="noNotesMsg" style="color: #999; font-size: 13px;">No notes added yet</div>
+                    </div>
+                </div>
+
+                <!-- Sidebar -->
+                <div class="sidebar">
+                    <!-- Status Card -->
+                    <div class="sidebar-card">
+                        <h4>📊 Status Timeline</h4>
+                        <div class="status-timeline">
+                            <div class="timeline-item" id="status-pending">Pending</div>
+                            <div class="timeline-item" id="status-review">Under Review</div>
+                            <div class="timeline-item" id="status-resolved">Resolved</div>
+                        </div>
+                    </div>
+
+                    <!-- Update Form -->
+                    <div class="sidebar-card">
+                        <h4>⚙️ Update Complaint</h4>
+                        <form class="update-form" id="updateForm">
+                            <div class="form-row">
+                                <select id="newStatus" required>
+                                    <option value="">Select Status</option>
+                                    <option value="pending">Pending</option>
+                                    <option value="under-review">Under Review</option>
+                                    <option value="resolved">Resolved</option>
+                                </select>
+                                <select id="newSeverity" required>
+                                    <option value="">Select Severity</option>
+                                    <option value="low">Low</option>
+                                    <option value="medium">Medium</option>
+                                    <option value="high">High</option>
+                                </select>
+                            </div>
+                            <div class="form-row full">
+                                <textarea id="adminNotes" placeholder="Add your notes here..."></textarea>
+                            </div>
+                            <button type="submit" class="action-btn primary">💾 Save Changes</button>
+                        </form>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="sidebar-card">
+                        <div class="action-buttons">
+                            <button class="action-btn primary" onclick="printComplaint()">🖨️ Print</button>
+                            <button class="action-btn secondary" onclick="backToDashboard()">↩️ Back</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="imageModal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeImageModal()">&times;</button>
+            <img id="modalImage" src="" alt="Full size" style="width: 100%; border-radius: 8px;">
+        </div>
+    </div>
+
+    <script>
+        let complaintData = null;
+        const complaintId = new URLSearchParams(window.location.search).get('id');
+
+        async function loadComplaint() {
+            const token = localStorage.getItem('token');
+
+            if (!complaintId) {
+                alert('No complaint ID provided');
+                window.location.href = '/admin-dashboard';
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/complaints/${complaintId}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                const data = await response.json();
+                complaintData = data.complaint;
+
+                displayComplaintDetails();
+            } catch (error) {
+                console.error('Error loading complaint:', error);
+                alert('Failed to load complaint details');
+            }
+        }
+
+        function displayComplaintDetails() {
+            const complaint = complaintData;
+            const student = complaint.studentId;
+
+            // Header info
+            document.getElementById('complaintId').textContent = `ID: ${complaint._id.substring(0, 8)}...`;
+            document.getElementById('complaintDate').textContent = `Date: ${new Date(complaint.createdAt).toLocaleDateString()}`;
+            document.getElementById('statusBadge').textContent = complaint.status.toUpperCase();
+
+            // Student info
+            document.getElementById('studentName').textContent = student?.name || 'Unknown';
+            document.getElementById('studentEmail').textContent = student?.email || 'N/A';
+            document.getElementById('studentPhone').textContent = complaint.studentPhone;
+            document.getElementById('severityLabel').innerHTML = `<span style="background: ${getSeverityColor(complaint.severity)}; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px;">${complaint.severity.toUpperCase()}</span>`;
+
+            // Message
+            document.getElementById('complaintMessage').textContent = complaint.message;
+
+            // Images
+            if (complaint.proofImages && complaint.proofImages.length > 0) {
+                document.getElementById('evidenceSection').style.display = 'block';
+                const gallery = document.getElementById('imageGallery');
+                gallery.innerHTML = complaint.proofImages.map((img, idx) => `
+                    <div class="gallery-image" onclick="openImageModal('${img.path}')">
+                        <img src="${img.path}" alt="Evidence ${idx + 1}">
+                    </div>
+                `).join('');
+            }
+
+            // Admin notes
+            if (complaint.adminNotes) {
+                document.getElementById('noNotesMsg').style.display = 'none';
+                document.getElementById('adminNotesList').style.display = 'block';
+                document.getElementById('existingAdminNotes').textContent = complaint.adminNotes;
+            }
+
+            // Set current values
+            document.getElementById('newStatus').value = complaint.status;
+            document.getElementById('newSeverity').value = complaint.severity;
+            document.getElementById('adminNotes').value = complaint.adminNotes || '';
+
+            // Update timeline
+            updateTimeline(complaint.status);
+        }
+
+        function getSeverityColor(severity) {
+            const colors = {
+                'low': '#10b981',
+                'medium': '#f59e0b',
+                'high': '#ef4444'
+            };
+            return colors[severity] || '#666';
+        }
+
+        function updateTimeline(currentStatus) {
+            document.getElementById('status-pending').classList.toggle('active', currentStatus === 'pending');
+            document.getElementById('status-review').classList.toggle('active', currentStatus === 'under-review');
+            document.getElementById('status-resolved').classList.toggle('active', currentStatus === 'resolved');
+        }
+
+        document.getElementById('updateForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const token = localStorage.getItem('token');
+            const status = document.getElementById('newStatus').value;
+            const severity = document.getElementById('newSeverity').value;
+            const adminNotes = document.getElementById('adminNotes').value;
+
+            try {
+                const response = await fetch(`/api/complaints/${complaintId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ status, severity, adminNotes })
+                });
+
+                if (response.ok) {
+                    alert('✅ Complaint updated successfully');
+                    loadComplaint();
+                } else {
+                    alert('❌ Failed to update complaint');
+                }
+            } catch (error) {
+                alert('❌ An error occurred');
+            }
+        });
+
+        function openImageModal(imagePath) {
+            document.getElementById('modalImage').src = imagePath;
+            document.getElementById('imageModal').classList.add('active');
+        }
+
+        function closeImageModal() {
+            document.getElementById('imageModal').classList.remove('active');
+        }
+
+        function printComplaint() {
+            window.print();
+        }
+
+        function backToDashboard() {
+            window.location.href = '/admin-dashboard';
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('userRole');
+            window.location.href = '/';
+        }
+
+        // Load complaint on page load
+        document.addEventListener('DOMContentLoaded', loadComplaint);
+    </script>
+</body>
+</html>

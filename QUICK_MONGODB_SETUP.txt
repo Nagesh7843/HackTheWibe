@@ -1,0 +1,77 @@
+# MongoDB Atlas Setup Instructions
+
+## 🎯 Quick Setup (Copy-Paste)
+
+### Step 1: Get Your MongoDB URI
+
+Go to: https://www.mongodb.com/cloud/atlas
+
+1. Sign up → Create account
+2. Create cluster (free tier)
+3. Click "Connect"
+4. Choose "Connect Your Application"
+5. Copy the connection string
+
+### Step 2: Update .env File
+
+Replace this line in `.env`:
+```
+MONGODB_URI=YOUR_CONNECTION_STRING_HERE
+```
+
+Example (fill in your details):
+```
+MONGODB_URI=mongodb+srv://username:password@cluster0.xxxxx.mongodb.net/ragging-report-db?retryWrites=true&w=majority
+```
+
+### Step 3: Restart Server
+
+```powershell
+cd "c:\Users\yashk\OneDrive\Documents\hackthevibe\ragging-report-platform"
+node server.js
+```
+
+Expected Output:
+```
+✅ MongoDB connected successfully
+📍 Database: mongodb+srv://...
+Server running on port 5000
+```
+
+---
+
+## Connection String Format Reference
+
+```
+mongodb+srv://USERNAME:PASSWORD@CLUSTER.mongodb.net/DATABASE_NAME?retryWrites=true&w=majority
+```
+
+**Where:**
+- `USERNAME` = Your MongoDB Atlas username
+- `PASSWORD` = Your MongoDB Atlas password  
+- `CLUSTER` = Your cluster name (e.g., cluster0)
+- `DATABASE_NAME` = ragging-report-db
+
+---
+
+## Current .env Template
+
+```dotenv
+PORT=5000
+MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/ragging-report-db?retryWrites=true&w=majority
+JWT_SECRET=your_super_secret_jwt_key_change_this_in_production
+NODE_ENV=development
+```
+
+---
+
+## ✅ Once Connected
+
+Your backend will automatically:
+- Create collections for students, admins, complaints
+- Handle all user registrations
+- Store complaint submissions
+- Manage authentication tokens
+- Process file uploads
+
+Everything works automatically after connection! 🚀

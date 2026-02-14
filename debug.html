@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login Debug Test</title>
+    <style>
+        body { font-family: Arial; margin: 20px; }
+        .test-section { border: 1px solid #ccc; padding: 15px; margin: 10px 0; }
+        input { margin: 5px; padding: 5px; }
+        button { padding: 8px 15px; background: #007bff; color: white; border: none; cursor: pointer; }
+        .log { background: #f5f5f5; padding: 10px; margin: 10px 0; border-left: 3px solid #007bff; max-height: 300px; overflow-y: auto; }
+        .success { color: green; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
+    <h1>🔍 Login Debug Test</h1>
+    
+    <div class="test-section">
+        <h3>Test 1: Check Student in Database</h3>
+        <p>This will verify if the student exists</p>
+        <button onclick="testDatabase()">Run Database Test</button>
+        <div id="dbLog" class="log"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>Test 2: Test Login API Directly</h3>
+        <input type="text" id="phone" placeholder="Phone Number" value="9876543210">
+        <input type="password" id="pass" placeholder="Password" value="student123">
+        <button onclick="testLoginAPI()">Test Login API</button>
+        <div id="apiLog" class="log"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>Test 3: Simulate Form Submission</h3>
+        <button onclick="testFormSubmission()">Simulate Form Submission</button>
+        <div id="formLog" class="log"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>📋 Browser Console</h3>
+        <p>Press F12 to open Developer Tools and check the Console tab for detailed logs</p>
+    </div>
+
+    <script>
+        function log(id, msg, type = 'info') {
+            const el = document.getElementById(id);
+            const time = new Date().toLocaleTimeString();
+            const icon = type === 'error' ? '❌' : type === 'success' ? '✅' : 'ℹ️';
+            const color = type === 'error' ? 'red' : type === 'success' ? 'green' : 'black';
+            el.innerHTML += `<p style="color: ${color}">[${time}] ${icon} ${msg}</p>`;
+            el.scrollTop = el.scrollHeight;
+            console.log(`[${type.toUpperCase()}] ${msg}`);
+        }
+
+        async function testDatabase() {
+            const logId = 'dbLog';
+            document.getElementById(logId).innerHTML = '';
+            log(logId, 'Starting database test...');
+            
+            // This would require a special endpoint - for now just log
+            log(logId, 'To verify: Check MongoDB Atlas directly', 'info');
+            log(logId, 'Student phone: 9876543210 should exist', 'info');
+        }
+
+        async function testLoginAPI() {
+            const logId = 'apiLog';
+            document.getElementById(logId).innerHTML = '';
+            
+            const phoneNumber = document.getElementById('phone').value;
+            const password = document.getElementById('pass').value;
+            
+            log(logId, `Testing login with phone: ${phoneNumber}`);
+            
+            try {
+                const response = await fetch('/api/students/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ phoneNumber, password })
+                });
+
+                log(logId, `API Response Status: ${response.status}`, response.ok ? 'info' : 'error');
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    log(logId, `✅ Login successful!`, 'success');
+                    log(logId, `Token received: ${data.token.substring(0, 50)}...`, 'success');
+                    log(logId, `Student: ${data.student.name} (${data.student.phoneNumber})`, 'success');
+                } else {
+                    log(logId, `Login failed: ${data.message}`, 'error');
+                }
+            } catch (error) {
+                log(logId, `Network error: ${error.message}`, 'error');
+            }
+        }
+
+        async function testFormSubmission() {
+            const logId = 'formLog';
+            document.getElementById(logId).innerHTML = '';
+            
+            log(logId, 'Checking if form elements exist...');
+            
+            const phoneEl = document.querySelector('input[placeholder="Phone Number"]');
+            const passEl = document.querySelector('input[placeholder="Password"]');
+            
+            if (!phoneEl || !passEl) {
+                log(logId, 'Form elements not found on this page', 'error');
+                return;
+            }
+            
+            log(logId, 'Form elements found', 'success');
+            
+            // Note: Actual form testing would happen on the login page
+            log(logId, 'Visit http://localhost:5000 and use the login form to test', 'info');
+            log(logId, 'Open F12 console to see detailed logs during login', 'info');
+        }
+
+        // Auto-test on load
+        window.addEventListener('load', () => {
+            console.log('🔍 Debug page loaded');
+            console.log('API Server should be running at http://localhost:5000');
+        });
+    </script>
+</body>
+</html>

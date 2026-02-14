@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - SafeCollege</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 420px;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .login-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            background: #f9f9f9;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group input::placeholder {
+            color: #999;
+        }
+
+        .message {
+            margin-bottom: 20px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            display: none;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.error {
+            background: #fee;
+            color: #c33;
+            border: 1px solid #fcc;
+            display: block;
+        }
+
+        .message.success {
+            background: #efe;
+            color: #3c3;
+            border: 1px solid #cfc;
+            display: block;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .submit-btn.loading {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .spinner {
+            width: 16px;
+            height: 16px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top: 3px solid white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            display: none;
+        }
+
+        .spinner.show {
+            display: block;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .divider {
+            position: relative;
+            margin: 25px 0;
+            text-align: center;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: #e0e0e0;
+        }
+
+        .divider-text {
+            background: white;
+            padding: 0 10px;
+            color: #999;
+            font-size: 13px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .back-link {
+            text-align: center;
+        }
+
+        .back-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .back-link a:hover {
+            color: #764ba2;
+            text-decoration: underline;
+        }
+
+        @media (max-width: 480px) {
+            .login-card {
+                padding: 30px 20px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .submit-btn {
+                padding: 12px;
+                font-size: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-card">
+            <div class="header">
+                <h1>🛡️ Admin Login</h1>
+                <p>Access the SafeCollege admin panel</p>
+            </div>
+
+            <div id="message" class="message"></div>
+
+            <form id="adminLoginForm" onsubmit="handleAdminLogin(event)">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                </div>
+
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    <span class="spinner" id="spinner"></span>
+                    <span id="btnText">Login as Admin</span>
+                </button>
+            </form>
+
+            <div class="divider">
+                <span class="divider-text">New to SafeCollege?</span>
+            </div>
+
+            <div class="back-link">
+                <p style="font-size: 14px; color: #666; margin-bottom: 10px;">
+                    You need admin credentials to access this page.
+                </p>
+                <a href="/">← Back to Home</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Redirect if already logged in
+        function checkAuth() {
+            const token = localStorage.getItem('token');
+            const userRole = localStorage.getItem('userRole');
+            if (token && userRole === 'admin') {
+                window.location.href = '/admin-dashboard';
+            }
+        }
+
+        // Handle admin login
+        async function handleAdminLogin(event) {
+            event.preventDefault();
+
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const messageDiv = document.getElementById('message');
+            const submitBtn = document.getElementById('submitBtn');
+            const spinner = document.getElementById('spinner');
+            const btnText = document.getElementById('btnText');
+
+            // Validation
+            if (!email || !password) {
+                messageDiv.textContent = '❌ Please enter both email and password';
+                messageDiv.className = 'message error';
+                return;
+            }
+
+            // Show loading state
+            submitBtn.classList.add('loading');
+            submitBtn.disabled = true;
+            spinner.classList.add('show');
+            btnText.textContent = 'Logging in...';
+            messageDiv.className = 'message';
+
+            try {
+                console.log('📝 Attempting admin login with email:', email);
+
+                const response = await fetch('/api/admins/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+                console.log('📡 API Response:', { status: response.status, message: data.message });
+
+                if (response.ok) {
+                    console.log('✅ Admin login successful');
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('userRole', 'admin');
+                    localStorage.setItem('adminId', data.admin.id);
+                    
+                    messageDiv.textContent = '✅ Login successful! Redirecting...';
+                    messageDiv.className = 'message success';
+                    
+                    setTimeout(() => {
+                        window.location.href = '/admin-dashboard';
+                    }, 500);
+                } else {
+                    console.log('❌ Login failed:', data.message);
+                    messageDiv.textContent = '❌ ' + (data.message || 'Login failed. Please check your credentials.');
+                    messageDiv.className = 'message error';
+                    
+                    submitBtn.classList.remove('loading');
+                    submitBtn.disabled = false;
+                    spinner.classList.remove('show');
+                    btnText.textContent = 'Login as Admin';
+                }
+            } catch (error) {
+                console.error('❌ Network error:', error);
+                messageDiv.textContent = '❌ An error occurred. Please try again.';
+                messageDiv.className = 'message error';
+                
+                submitBtn.classList.remove('loading');
+                submitBtn.disabled = false;
+                spinner.classList.remove('show');
+                btnText.textContent = 'Login as Admin';
+            }
+        }
+
+        // Check authentication on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('📄 Admin login page loaded');
+            checkAuth();
+        });
+    </script>
+</body>
+</html>

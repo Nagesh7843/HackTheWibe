@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Ragging Reporting Platform</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">🔐 SafeCollege</div>
+            <ul class="nav-menu">
+                <li><a href="/">Home</a></li>
+                <li class="dropdown">
+                    <a href="#">Student <span class="arrow">▼</span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/register-student">Register</a></li>
+                        <li><a href="javascript:void(0)" onclick="window.location.href = '/login-student.html'">Login</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#">Admin <span class="arrow">▼</span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/register-admin">Register</a></li>
+                        <li><a href="javascript:void(0)" onclick="adminLogin()">Login</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>🛡️ College Ragging Reporting & Cyber Awareness Platform</h1>
+            <p>A safe and secure platform for students to report ragging incidents and learn about cyber security</p>
+            <div class="hero-buttons">
+                <button class="btn btn-primary" onclick="window.location.href = '/login-student.html'">Student Login</button>
+                <button class="btn btn-secondary" onclick="adminLogin()">Admin Login</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="features">
+        <div class="container">
+            <h2>Key Features</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">👨‍🎓</div>
+                    <h3>Student Portal</h3>
+                    <p>Report ragging incidents securely with photo evidence and track submission status</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <h3>Secure & Private</h3>
+                    <p>All complaints are encrypted and only visible to authorized administrators</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Admin Dashboard</h3>
+                    <p>Review, manage, and respond to complaints efficiently with detailed tracking</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎓</div>
+                    <h3>Cyber Awareness</h3>
+                    <p>Learn about cyber security threats and best practices for online safety</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="how-it-works">
+        <div class="container">
+            <h2>How It Works</h2>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Student Registration</h3>
+                    <p>Register using your phone number and password</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Submit Complaint</h3>
+                    <p>Report ragging incident with photos and details</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Admin Review</h3>
+                    <p>Admins review and take appropriate action</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h3>Resolution</h3>
+                    <p>Case is resolved and student is notified</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 SafeCollege Platform. All rights reserved. | Stay Safe, Stay Secure</p>
+        </div>
+    </footer>
+
+    <div id="loginModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Student Login</h2>
+            <form id="studentLoginForm">
+                <input type="text" placeholder="Phone Number" id="phoneNumber" required>
+                <input type="password" placeholder="Password" id="password" required>
+                <button type="submit" class="btn btn-primary">Login</button>
+            </form>
+            <p>Don't have an account? <a href="/register-student">Register here</a></p>
+        </div>
+    </div>
+
+    <div id="adminLoginModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close" onclick="closeAdminModal()">&times;</span>
+            <h2>Admin Login</h2>
+            <form id="adminLoginForm">
+                <input type="email" placeholder="Email" id="adminEmail" required>
+                <input type="password" placeholder="Password" id="adminPassword" required>
+                <button type="submit" class="btn btn-primary">Login</button>
+            </form>
+            <p>Don't have an account? <a href="/register-admin">Register here</a></p>
+        </div>
+    </div>
+
+    <script src="/js/main.js"></script>
+</body>
+</html>

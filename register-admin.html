@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Registration - SafeCollege</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">🔐 SafeCollege</div>
+            <ul class="nav-menu">
+                <li><a href="/">Home</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="auth-section">
+        <div class="auth-container">
+            <h2>Admin Registration</h2>
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="name">Full Name:</label>
+                    <input type="text" id="name" placeholder="Your full name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" placeholder="admin@college.ac.in" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" placeholder="Create a strong password" minlength="8" required>
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password:</label>
+                    <input type="password" id="confirmPassword" placeholder="Confirm your password" minlength="8" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Register</button>
+            </form>
+            <p>Already have an account? <a href="/">Login here</a></p>
+            <div id="message" class="message" style="display: none;"></div>
+        </div>
+    </section>
+
+    <script>
+        // Check if already logged in
+        window.addEventListener('load', () => {
+            const token = localStorage.getItem('token');
+            const userRole = localStorage.getItem('userRole');
+            if (token && userRole === 'admin') {
+                window.location.href = '/admin-dashboard';
+            }
+        });
+
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (password !== confirmPassword) {
+                showMessage('Passwords do not match', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/admins/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('userRole', 'admin');
+                    showMessage('Registration successful! Redirecting...', 'success');
+                    setTimeout(() => window.location.href = '/admin-dashboard', 1500);
+                } else {
+                    // Check if error is "Admin already exists"
+                    if (data.message && data.message.toLowerCase().includes('already exists')) {
+                        showMessage(`Account with this email already exists. <br><a href="/" onclick="adminLogin(); return false;" style="color: #007bff; text-decoration: underline;">Click here to login instead</a>`, 'warning');
+                    } else {
+                        showMessage(data.message || 'Registration failed', 'error');
+                    }
+                }
+            } catch (error) {
+                showMessage('An error occurred. Please try again.', 'error');
+            }
+        });
+
+        function showMessage(msg, type) {
+            const messageEl = document.getElementById('message');
+            messageEl.innerHTML = msg;
+            messageEl.className = `message ${type}`;
+            messageEl.style.display = 'block';
+            messageEl.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function adminLogin() {
+            // Redirect to login on home page
+            window.location.href = '/';
+        }
+    </script>
+</body>
+</html>
